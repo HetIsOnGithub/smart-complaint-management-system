@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+
+{% block title %}Complaint Details | Smart Complaint Management System{% endblock %}
+
+{% block content %}
+
+<div class="row">
+
+    <div class="col-lg-8">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header d-flex justify-content-between align-items-center">
+
+                <h3 class="mb-0">
+                    {{ complaint.title }}
+                </h3>
+
+                {% if complaint.status == "Pending" %}
+                    <span class="badge bg-warning text-dark">{{ complaint.status }}</span>
+                {% elif complaint.status == "In Progress" %}
+                    <span class="badge bg-primary">{{ complaint.status }}</span>
+                {% else %}
+                    <span class="badge bg-success">{{ complaint.status }}</span>
+                {% endif %}
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row mb-3">
+
+                    <div class="col-md-6">
+
+                        <strong>Category</strong>
+
+                        <p>{{ complaint.category }}</p>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <strong>Priority</strong>
+
+                        {% if complaint.priority == "High" %}
+                            <span class="badge bg-danger">{{ complaint.priority }}</span>
+                        {% elif complaint.priority == "Medium" %}
+                            <span class="badge bg-warning text-dark">{{ complaint.priority }}</span>
+                        {% else %}
+                            <span class="badge bg-success">{{ complaint.priority }}</span>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                <h5>Description</h5>
+
+                <p style="white-space: pre-line;">
+                    {{ complaint.description }}
+                </p>
+
+                {% if complaint.image %}
+
+                <hr>
+
+                <h5>Uploaded Image</h5>
+
+                <img
+                    src="{{ complaint.image.url }}"
+                    class="img-fluid rounded border"
+                    alt="Complaint Image"
+                >
+
+                {% endif %}
+
+                <hr>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Created:
+                            {{ complaint.created_at|date:"d M Y H:i" }}
+                        </small>
+
+                    </div>
+
+                    <div class="col-md-6 text-end">
+
+                        <small class="text-muted">
+                            Updated:
+                            {{ complaint.updated_at|date:"d M Y H:i" }}
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="card shadow">
+
+            <div class="card-header">
+
+                <h4 class="mb-0">
+                    Comments
+                </h4>
+
+            </div>
+
+            <div class="card-body">
+
+                {% if comments %}
+
+                    {% for comment in comments %}
+
+                        <div class="border rounded p-3 mb-3">
+
+                            <div class="d-flex justify-content-between">
+
+                                <strong>
+                                    {{ comment.user.username }}
+                                </strong>
+
+                                <small class="text-muted">
+                                    {{ comment.created_at|date:"d M Y H:i" }}
+                                </small>
+
+                            </div>
+
+                            <p class="mb-0 mt-2">
+                                {{ comment.comment }}
+                            </p>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p class="text-muted">
+                        No comments yet.
+                    </p>
+
+                {% endif %}
+
+                <hr>
+
+                <form
+                    method="post"
+                    action="{% url 'add_comment' complaint.id %}"
+                >
+
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+
+                        {{ comment_form.comment }}
+
+                        {% if comment_form.comment.errors %}
+
+                            {% for error in comment_form.comment.errors %}
+
+                                <div class="text-danger small mt-1">
+                                    {{ error }}
+                                </div>
+
+                            {% endfor %}
+
+                        {% endif %}
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Add Comment
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card shadow">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+                    Complaint Information
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <table class="table">
+
+                    <tr>
+                        <th>ID</th>
+                        <td>{{ complaint.id }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>User</th>
+                        <td>{{ complaint.user.username }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Category</th>
+                        <td>{{ complaint.category }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Priority</th>
+                        <td>{{ complaint.priority }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Status</th>
+                        <td>{{ complaint.status }}</td>
+                    </tr>
+
+                </table>
+
+                {% if request.user.is_staff %}
+
+                    <a
+                        href="{% url 'admin_dashboard' %}"
+                        class="btn btn-secondary w-100"
+                    >
+                        Back to Admin Dashboard
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="{% url 'dashboard' %}"
+                        class="btn btn-secondary w-100"
+                    >
+                        Back to Dashboard
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

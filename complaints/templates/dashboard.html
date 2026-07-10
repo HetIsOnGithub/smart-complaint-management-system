@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Smart Complaint Management System{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="mb-1">
+            Welcome, {{ request.user.first_name|default:request.user.username }}
+        </h2>
+        <p class="text-muted mb-0">
+            Manage and track your complaints.
+        </p>
+    </div>
+
+    <a href="{% url 'submit_complaint' %}" class="btn btn-primary">
+        Submit Complaint
+    </a>
+
+</div>
+
+<div class="row mb-4">
+
+    <div class="col-md-3 mb-3">
+
+        <div class="card text-center shadow-sm border-0">
+
+            <div class="card-body">
+
+                <h6 class="text-muted">
+                    Total Complaints
+                </h6>
+
+                <h2 class="fw-bold">
+                    {{ total_complaints }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3 mb-3">
+
+        <div class="card text-center shadow-sm border-0">
+
+            <div class="card-body">
+
+                <h6 class="text-muted">
+                    Pending
+                </h6>
+
+                <h2 class="fw-bold text-warning">
+                    {{ pending_count }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3 mb-3">
+
+        <div class="card text-center shadow-sm border-0">
+
+            <div class="card-body">
+
+                <h6 class="text-muted">
+                    In Progress
+                </h6>
+
+                <h2 class="fw-bold text-primary">
+                    {{ in_progress_count }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3 mb-3">
+
+        <div class="card text-center shadow-sm border-0">
+
+            <div class="card-body">
+
+                <h6 class="text-muted">
+                    Resolved
+                </h6>
+
+                <h2 class="fw-bold text-success">
+                    {{ resolved_count }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card shadow border-0">
+
+    <div class="card-header bg-white">
+
+        <h4 class="mb-0">
+            My Complaints
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        {% if complaints %}
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th></th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for complaint in complaints %}
+
+                    <tr>
+
+                        <td>
+                            {{ complaint.title }}
+                        </td>
+
+                        <td>
+                            {{ complaint.category }}
+                        </td>
+
+                        <td>
+
+                            {% if complaint.priority == "High" %}
+                                <span class="badge bg-danger">
+                                    {{ complaint.priority }}
+                                </span>
+
+                            {% elif complaint.priority == "Medium" %}
+                                <span class="badge bg-warning text-dark">
+                                    {{ complaint.priority }}
+                                </span>
+
+                            {% else %}
+                                <span class="badge bg-success">
+                                    {{ complaint.priority }}
+                                </span>
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if complaint.status == "Pending" %}
+                                <span class="badge bg-warning text-dark">
+                                    {{ complaint.status }}
+                                </span>
+
+                            {% elif complaint.status == "In Progress" %}
+                                <span class="badge bg-primary">
+                                    {{ complaint.status }}
+                                </span>
+
+                            {% else %}
+                                <span class="badge bg-success">
+                                    {{ complaint.status }}
+                                </span>
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ complaint.created_at|date:"d M Y" }}
+                        </td>
+
+                        <td>
+
+                            <a
+                                href="{% url 'complaint_detail' complaint.id %}"
+                                class="btn btn-sm btn-outline-primary"
+                            >
+                                View
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="text-center py-5">
+
+            <h5>
+                No complaints submitted yet.
+            </h5>
+
+            <p class="text-muted">
+                Submit your first complaint to get started.
+            </p>
+
+            <a
+                href="{% url 'submit_complaint' %}"
+                class="btn btn-primary"
+            >
+                Submit Complaint
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Home | Smart Complaint Management System{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-5">
+
+    <div class="col-lg-8">
+
+        <div class="card shadow-lg border-0">
+
+            <div class="card-body text-center p-5">
+
+                <h1 class="display-5 fw-bold mb-3">
+                    Smart Complaint Management System
+                </h1>
+
+                <p class="lead text-muted mb-4">
+                    Submit complaints effortlessly with AI-powered title, category, and priority generation. Track complaint status, communicate through comments, and receive timely updates from the administration.
+                </p>
+
+                {% if user.is_authenticated %}
+
+                    <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg me-2">
+                        Go to Dashboard
+                    </a>
+
+                    <a href="{% url 'submit_complaint' %}" class="btn btn-success btn-lg">
+                        Submit Complaint
+                    </a>
+
+                {% else %}
+
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg me-2">
+                        Login
+                    </a>
+
+                    <a href="{% url 'register' %}" class="btn btn-outline-primary btn-lg">
+                        Register
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row mt-5">
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card h-100 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <h4 class="mb-3">
+                    AI Assistance
+                </h4>
+
+                <p class="text-muted">
+                    Enter only the complaint description. The system automatically generates the complaint title, category, and priority using Gemini AI.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card h-100 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <h4 class="mb-3">
+                    Track Progress
+                </h4>
+
+                <p class="text-muted">
+                    Monitor every complaint through Pending, In Progress, and Resolved stages from your personal dashboard.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card h-100 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <h4 class="mb-3">
+                    Easy Communication
+                </h4>
+
+                <p class="text-muted">
+                    Stay connected with administrators by adding comments and viewing updates on each complaint.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
